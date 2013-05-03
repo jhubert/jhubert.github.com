@@ -1,0 +1,28 @@
+---
+layout: post
+title: Color picking on OSX Lion
+---
+
+<p><img src="http://media.tumblr.com/tumblr_lyd9aqgLgd1qz4mfn.png"/></p>
+
+<p>Doing the rapid prototyping that I do, I&#8217;ve often relied on Apple&#8217;s <a href="http://en.wikipedia.org/wiki/DigitalColor_Meter">Digital Color Meter</a> to grab HEX color codes. However, upon upgrading to OSX Lion I found the hex values to no longer be available.</p>
+
+<p>My quest to figure out a replacement lead me to discover a few things.</p>
+
+<p>First, you can create custom color pickers and add them to the standard OSX color tool that is used by most native apps (Preview, Pages, etc). I didn&#8217;t know this, but it&#8217;s quite cool.</p>
+
+<p>Jesper over at wafflesoftware.net has created <a href="http://wafflesoftware.net/hexpicker/">Hex Color Picker</a>, an extension that you can drop in to add Hex functionality. It&#8217;s quick and effective, as long as you have access to the OSX color tool.</p>
+
+<p>That&#8217;s where this tip about <a href="http://www.macosxtips.co.uk/index_files/replace-digitalcolor-meter-in-lion.php">replacing the digital color meter</a> comes in handy. It shows you how to write a quick applescript to launch the color picker at any point in time. I named the application DCM so that I could just open spotlight and get to it quickly.</p>
+
+<p>And then, the kicker.</p>
+
+<p>While reading through the comments on that previous tip, I came across one from <a href="http://twitter.com/aaron_stroud">Aaron Stroud</a>:</p>
+
+<pre>
+DigitalColor Meter still supports hex values, they've just hidden it.
+View &gt; Display Values &gt; as Hexadecimal.
+Shift + ⌘C copies the hex value.
+</pre>
+
+<p>Turns out it&#8217;s been there all along. After making that change to the Digital Color Meter, I can now grab hex values quickly again. Huzzah!</p>

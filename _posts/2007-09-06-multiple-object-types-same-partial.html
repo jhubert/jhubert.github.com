@@ -1,0 +1,56 @@
+---
+layout: post
+title: Handling multiple object types with the same partial
+category: article
+tags: howto rubyonrails
+---
+
+<p>I&#8217;m currently using a single form partial to handle multiple objects that are all using STI.  This usually isn&#8217;t a problem because the form_for helper lets you keep the actual object anonymous, like this:
+
+{% highlight erb %}
+<p><b>Name</b><br /><%= region_form.text_field :name %></p>
+{% endhighlight %}
+
+<p>But what happens when you want to use a helper that doesn&#8217;t work so well with the <pre>region_form.text_field</pre> objects?</p>
+
+<p>I did a little bit of digging into the default object that is passed into the partial, and this is what I found:</p>
+
+{% highlight ruby %}
+region_form.object_name
+{% endhighlight %}
+
+<p>This lets me implement my multiple select for every type of object, without having to specify anything explicitly.</p>
+
+<p>Example:</p>
+
+<p>In the view:</p>
+
+{% highlight erb %}
+<% form_for(:province, :url => provinces_path) do |f| %>
+ <%= render :partial => 'shared/region_form', :object => f %>
+ <p><%= submit_tag "Create" %> or <%= link_to 'Cancel', provinces_path %></p>
+<% end %>
+{% endhighlight %}
+
+<p>In the helper shared/_region_form.html:</p>
+
+{% highlight erb %}
+<p><b>Name</b><br /><%= region_form.text_field :name %></p>
+<p><label for="alias_region_id">Aliased By:</label><br />
+<%= select_tag(
+               "#{region_form.object_name}[aliased_by][]",
+               options_from_collection_for_select(
+                 Region.find(:all),
+                 'id',
+                 'title',
+                 instance_variable_get("@#{region_form.object_name}").aliased_by_ids),
+               :multiple => true
+             )
+%></p>
+{% endhighlight %}
+
+<p>So, we use a combination of region_form.object name and instance_variable_get to make the form handle whatever object we throw at it.</p>
+
+
+
+<p>Yay ruby!</p>

@@ -1,0 +1,14 @@
+---
+layout: default
+description: An archive of my thoughts since 2000.
+---
+
+<div id="posts">
+  <h2>A brief history of mine</h2>
+  <p>Some of these go back to my blog in the early days of my internet life. I read these every now and then to see how I have grown over time. I lay them bare here for your discovery. Please treat them with care.</p>
+  <ul>
+    {% for post in site.categories.article %}
+    <li><span>{{ post.date | date_to_string }}</span> - <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>

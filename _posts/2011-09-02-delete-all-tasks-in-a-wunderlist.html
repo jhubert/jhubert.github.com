@@ -1,0 +1,28 @@
+---
+layout: post
+title: Delete all tasks in a Wunderlist
+category: article
+tags: howto javascript
+---
+
+<p>I&#8217;ve been experimenting with a CulturedCode Things -&gt; Wunderlist import tool, and it&#8217;s resulted in a few mix ups that left hundreds of items not where I wanted them. Instead of being filed in their own list, they are sitting in the inbox. Because it&#8217;s the inbox, I can&#8217;t just delete the list. To delete them all, I would have to click on each one and confirm the prompt. Kind of a pain in the butt.</p>
+
+
+
+<p>Now, Wunderlist doesn&#8217;t have an API, but what they do have is a web based version of the tool. So, I figured that I could inspect their code and then write some JavaScript to do the deletion for me. Turns out I was right.</p>
+
+
+
+<p>Here is the code I came up with. In order to use it, I&#8217;ve turned it into a bookmarklet. Just drag the following link up to your Bookmarks bar in the browser. When you open up a list in Wunderlist and click on the bookmarklet, it will confirm that you want to proceed before removing all of the items.</p>
+
+
+
+<p><a href="javascript:(function%20()%7Bfunction%20deleteAll()%7Bvar%20list=%24('ul#list'),list_id=parseInt(%24(list%5B0%5D).attr('rel'),10),list_name=%24('#list'+list_id+'%20b').html();if(list_id&gt;0)%7Bif(confirm('Are%20you%20sure%20you%20want%20to%20delete%20all%20the%20items%20in%20'+list_name))%7Blist.find('li').each(function%20()%7Bvar%20id=parseInt(%24(this).attr('id'),10),task=%7Bid:id,list_id:list_id,deleted:1%7D;%24.ajax(%7Burl:'/ajax/tasks/update/',type:'POST',data:%7B'task':JSON.stringify(task)%7D,success:function%20(response_data,text,xhrobject)%7Bvar%20response=ajaxresponse.check(response_data);if(response.status==='success')%7Bwunderlist.updateBadgeCount();%7D%7D%7D);%7D);alert('Done.%20Please%20reload%20the%20page.');%7D%7D%7DdeleteAll();%7D());">Delete All Wunderlist Items in a List</a></p>
+
+
+
+<p>If you&#8217;re curious about the actual code, you can check it out in this gist: <a href="https://gist.github.com/1188744">Delete all wunderlist items in a list</a>.</p>
+
+
+
+<p>If you have any questions, just let me know. :)</p>

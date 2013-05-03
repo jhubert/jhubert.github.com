@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+  {% if page.description %}
+  <meta name="description" content="{{ page.description }}" />
+  {% endif %}
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Muli">
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.7.1/build/cssgrids/grids-min.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css" media="screen">
+  {% if site.feedburner %}
+  <link href="http://feeds.feedburner.com/{{ site.feedburner.id }}" rel="alternate" title="{{ site.title }}" type="application/atom+xml" />
+  {% endif %}
+  {% if site.google_analytics %}
+  <!-- google analytics async -->
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '{{ site.google_analytics.account }}']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  {% endif %}
+  <script src="http://yui.yahooapis.com/3.7.2/build/yui/yui-min.js"></script>
+  <script src="/javascripts/scripts.js"></script>
+</head>
+<body>
+<div id="hd">
+  <div class="yui3-g">
+    <div class="yui3-u-5-24">
+      <div class="sidebar"></div>
+    </div>
+    <div class="yui3-u-19-24">
+      <div class="content"></div>
+    </div>
+  </div>
+</div>
+<div id="container">
+  <div id="bd">
+    <div class="yui3-g">
+      <div class="yui3-u-5-24">
+        <div id="desc">
+          <h1><a href="/">Jeremy <span class="subtle">Hubert</span> <span class="last">Baker</span></a></h1>
+          {% if page.summary %}
+          <p>{{ page.summary }}</p>
+          {% else %}
+          <p>This is where I write about life, technology, startups, travel and anything else that comes up.</p>
+          <p>You can also find information about projects I'm working and links to my open source code.</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="yui3-u-19-24">
+        <div id="content">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="yui3-g">
+    <div class="yui3-u-5-24">
+      <div id="footer">
+        <p>&copy; 2001 &ndash; 2012 Jeremy Baker<br>All Rights Reserved | <a href="/archive.html">archive</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% if site.github %}
+  <a href="http://github.com/{{ site.github.username }}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" /></a>
+{% endif %}
+</body>
+</html>

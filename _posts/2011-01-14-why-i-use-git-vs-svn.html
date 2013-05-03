@@ -1,0 +1,60 @@
+---
+layout: post
+title: 3 reasons I use Git instead of SVN
+category: article
+tags: howto git
+---
+
+<p>This was a response to an email from a friend about why he should switch to Git from SVN. Perhaps you&#8217;ll find it useful as well. :)</p>
+
+<p>&#8212;&#8212;&#8212;-</p>
+
+<p>Three things come to mind right away:</p>
+
+<p><strong>1) Distributed instead of centralized.</strong></p>
+
+<p>With SVN, there is one &#8220;true&#8221; copy of the code at all times. Everyone checks out the code from this one true copy and checks the code back in when you&#8217;re done. There is nothing wrong with this, and in fact, this is also what you will also usually have with Git. The big difference is that you don&#8217;t *HAVE* to have it with Git if you don&#8217;t want to.</p>
+
+<p>For example, with OnceOvers, Dan and I work off of the development installation that is up on Heroku. This acts as the &#8220;true&#8221; copy right now, meaning that Dan and I both check out  a complete version from the one on the server and push code back into it. This works great for now and is essentially the same as what you would have with SVN.</p>
+
+<p>However, as soon as we are ready to take the site live, I will be pushing the site to a production installation hosted somewhere else. This is now the production instance of our website, instead of the development one. The map looks something like this: </p>
+
+<p><img src="http://cl.ly/0C313S1x3f2N291A1y3X/Screen_shot_2011-01-14_at_6.00.30_PM.png" width="462" height="302"/></p>
+
+<p>So that means that Dan and I can keep pushing and pulling from the development server without worry. When we want to take whatever we have live, we just push the current state to the production server. Additionally, I can also keep another copy of it on GitHub (or any git server) with only a single command.</p>
+
+<p>Also, because of the distributed architecture, I can keep pieces of the code in all sorts of places. So, if I wanted to OpenSource a portion of the application but keep another portion of it closed, that&#8217;s super easy.</p>
+
+<p>The distributed piece is also interesting because you don&#8217;t need an internet connection to check in some changes. The advantage to checking in changes is that you can see where they were and roll back to that point in the future. (Kind of a like a checkpoint in Mario) If you are working in SVN, you need to commit the changes to the server before breaking the whole page again or else you might lose your progress. With git, you can check in to the repository on your laptop as many times as you want without needing to connect to the internet, so you can wipe the whole file and be right back where you were within seconds. When you do get to an internet connection, you can just &#8220;git push&#8221; it to the remote server.</p>
+
+<p>Speaking of the remote server, because both copies of the repository are full copies, you don&#8217;t have to worry about losing the repository if the hard drive on the server crashes. You just specify a new remote repo and you&#8217;re back up and running in minutes with all of the history still intact. I&#8217;ve done this a number of times just when moving to a new hosting provider.</p>
+
+<p><strong>2) Super easy to create branches of your work to try new things</strong></p>
+
+<p>Now, all this is fine and dandy and not really that compelling since most of it can be done with SVN. However, where it gets really powerful is branching and merging. </p>
+
+<p>As a programmer, even when I&#8217;m working with HTML / CSS, I might try some crazy new idea that involves editing a bunch of files even though I&#8217;m not sure it&#8217;s going to work. With SVN, because I&#8217;m working from a server copy, I would either have to checkout the entire repo into another folder and do all my craziness or I would have to start working on it and change all of my files knowing that it would be a pain in the but to go back to the beginning. With SVN this also restricts me from making little changes while in the middle of a big change.</p>
+
+<p>Lets say you&#8217;re working on a site for a client and you want to move the entire HTML / CSS structure over to HTML5 / Eric Meyer Reset from XHTML 4.1 / YUI Reset. You start work and get about 3/4 done when the client calls and says there is a typo on the live site that needs to be fixed immediately. How do you go back to the live copy and make the little change when you&#8217;re in the middle of a big change? With SVN, you would checkout a new version of the repo, make the change and check it back in. Here are three ways to do it with Git, in order of complexity.</p>
+
+<ol><li>&#8220;git stash&#8221; will literally stash all changes that you have made and revert the files back to their last commit state, as if you had just downloaded them. You can make the little change, check it in and push it to the server. When you&#8217;re ready to get back to work, you just type &#8220;git stash apply&#8221; and you are back to where you were. With SVN you can do this with a diff / patch workflow, but it&#8217;s a bit more cumbersome than just typing stash. (Thanks @snookca for the reminder)</li>
+
+<li>&#8220;git add -p filewithtypo.html&#8221; will send you into interactive / partial mode. If there are multiple edits in a file but you just want to check in one of them, this will allow you to pick which one and check it in, instead of checking in the whole file. It&#8217;s awesome. :)</li>
+
+<li>Branching. With SVN, branching was kind of a pain in the ass. A bunch of smart people who use SVN seem to think it was easy enough, but I never really used it because it always broke or screwed something up. I guess I just wasn&#8217;t smart enough. Anyway, branching and merging in git is really straight forward. Lets say you want to work on the HTML5 rewrite. You can run &#8220;git branch html5&#8221; and it will create a new space for you to work. To work in that space, just type &#8220;git checkout html5&#8221; and you are now in the html5 branch. You start making your changes and then get the call from the client about the typo. All you do is type &#8220;git checkout master&#8221; and you&#8217;re back in the clean branch pre-changes. You fix the typo, check it in, push it to the server and then type &#8220;git checkout html5&#8221; to get back to work. When you are done making all of the HTML5 changes, you can run &#8220;git checkout master&#8221; to get back to the clean branch and then type &#8220;git merge html5&#8221; to apply all the changes that you made. It&#8217;s that easy. This also lets you work on totally separate features at the same time without any conflicts since you can have as many branches as you want. No pushing or pulling necessary to switch. :)</li>
+
+</ol><p><strong>3) Cleaner and smaller folder sizes</strong></p>
+
+<p>With SVN, you get all those annoying .svn folders created in your folder structure. If one of the folders get messed up, you&#8217;re in trouble. The folders hold the &#8220;clean&#8221; copy of every file so that you can revert back to it whenever you want. If you have made changes and then somehow screw up the .svn folder, you have to do a diff of your changes, svn up and the patch the files back together. Kind of a pain in the butt. That also means that every file you checkout is duplicated.</p>
+
+<p>With Git, there is only one folder created at the root of your project directory called &#8220;.git&#8221; and it holds all of the information about the repo. Instead of storing full copies of all the files, it stores diffs from one version to another. So, it only stores records of the changes. This lets you literally &#8220;play back&#8221; the changes that you&#8217;ve made over a number of commits. This is why it is so much easier to branch and merge files. Since diff files can be fuzzy, you don&#8217;t have to compare exact copies every times which results in less collisions. Also, the diffs are generally much smaller in size than an actual file, so you save space.</p>
+
+<p>&#8212;</p>
+
+<p>That about sums it up. As for why you would use this instead of SVN, that choice is totally up to you and SVN is still a darn good version control system.</p>
+
+<p>Versions is probably the best OSX visual version control application out there, although Tower is making progress on providing a Git one ( <a href="http://www.git-tower.com/">http://www.git-tower.com/</a> ) and Gitbox is already fairly mature ( <a href="http://www.gitboxapp.com/">http://www.gitboxapp.com/</a> ). As for Kaleidoscope, it works with Git as well and ties into Gitbox already.</p>
+
+<p>Personally, I like using the command line. I just find it so easy that I haven&#8217;t found a reason not to use it yet.</p>
+
+<p>I hope that answers some of your questions. :)</p>

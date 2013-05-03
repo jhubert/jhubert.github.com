@@ -1,0 +1,12 @@
+---
+layout: post
+title: wrong argument type Hash (expected Data) - Merb json
+---
+
+<p>I was having a heck of a time with .to_json in Merb. Turns out, it was because Merb&#8217;s to_json implementation doesn&#8217;t work the same as ActiveRecords.</p>
+
+<p>In order to get it working, I had to disable the Merb one by placing the following code at the top of my init.rb file:</p>
+
+<p>Merb.disable :json</p>
+
+<p>Just thought I&#8217;d share. :)</p>

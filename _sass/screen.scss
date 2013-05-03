@@ -1,0 +1,96 @@
+@import "mixins/_syntax";
+
+body {
+  margin: 0 auto;
+  width: 960px;
+  background-color: rgba(36,41,45,1);
+  color: #eee;
+  font-family: Muli,Courier,sans-serif;
+  font-size: 0.8em;
+  line-height: 1.6em;
+  position: relative;
+}
+
+#desc {
+  border: 1px solid #999;
+  border-width: 1px 0;
+  padding: 2em 0;
+}
+
+a { -webkit-transition: color 0.1s ease-in; }
+
+a:link { color: #98b5d1; }
+a:visited, a:active  { color: #b482b9; }
+a:hover { color: #8dadcb; }
+
+ul.unstyled {
+  padding-left: 2em;
+  li { list-style: none; }
+}
+
+section {
+  padding-left: 3em;
+
+  h2 { margin-left: -2em; }
+  ul.unstyled { padding-left:0; }
+}
+
+#content { margin-left: 4em; }
+#footer {
+  margin-top: 4em; color: #454a4e; font-size: 0.9em;
+  a { color: inherit; text-decoration: none; }
+}
+
+.subtle { color: #888; }
+
+#desc h1 { position: relative; margin-top: 0; font-size: 1.2em; font-weight: bold; }
+#desc h1 a { color: inherit; text-decoration: none; }
+#desc h1 .subtle { opacity: 0.3; -webkit-transition: all 1s ease; }
+#desc h1:hover .subtle { opacity: 1; }
+#desc h1:hover .last { margin-top: 30px; }
+
+#bd { margin-top: 4em; }
+#hd { position: fixed; top: 0; width: 960px; }
+#hd .sidebar, #hd .content { border-top-width: 2px; border-top-style: solid; height: 20px; background-color: rgba(36,41,45,0.8);  -webkit-transition: all 0.2s ease; }
+#hd .sidebar:hover, #hd .content:hover  { border-top-width: 0px; }
+#hd .sidebar { border-top-color: #d7f33f;}
+#hd .content { border-top-color: #63d2f9; margin-left: 4em; }
+
+.highlight { border: 1px solid #333; overflow: auto; border-radius: 3px; padding: 10px; }
+.highlight pre { margin: 0; }
+
+#github {
+  li {
+    position: relative;
+
+    span.git-details { position: absolute; right: 0; background-color: rgba(36,41,45,0.8); padding-left: 10px; opacity: 0; -webkit-transition: all 0.2s ease-in; }
+
+    &:hover span.git-details { opacity: 1; }
+    &.remote p { display: none; }
+  }
+}
+
+#instagram ul {
+  list-style: none; padding: 0;
+
+  li {
+    float: left; margin-right: 10px;
+
+    img { width: 6em; }
+  }
+}
+
+.remote h2 { background-image: url(/images/ajax-loader.gif); background-repeat: no-repeat; background-position: center right; display: inline; padding-right: 30px; }
+
+#instagram .preview { display: block; }
+
+#instagram .preview {
+  position: absolute; top: 0; left: 0; right: 0; background-color: rgba(0,0,0,0.8); text-align: center;
+  -webkit-transition: all 0.3s ease-in;
+
+  &.hidden { top: -600px; }
+
+  img { width: 400px; }
+
+  .preview-padding { margin: 3em auto; }
+}

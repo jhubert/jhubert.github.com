@@ -1,1 +1,99 @@
-Welcome to my GitHub page
+---
+layout: index
+description: A description about my blog homepage
+github_repos: post-to-s3 acts-as-keyed
+---
+
+<section id="projects">
+  <h2>Adventures</h2>
+  <ul class="unstyled">
+    {% for post in site.categories.project %}
+      {% unless post.categories contains 'archived' %}
+    <li><a href="{{ post.url }}">{{ post.title }}</a> &ndash; <small>{{ post.date | date: "%B %Y" }}</small></li>
+      {% endunless %}
+    {% endfor %}
+  </ul>
+  <p><a href="/projects.html">Past adventures</a> are what made me <a href="/about.html">who I am today</a>.</p>
+</section>
+
+<section id="articles">
+  <h2>Thoughts</h2>
+  <ul class="unstyled">
+    {% for post in site.categories.article %}
+      {% if post.tags contains 'favorite' %}
+    <li><span>{{ post.date | date_to_string }}</span> &ndash; <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  <p>Still curious? <a href="/thoughts.html">Read my mind</a>.</p>
+</section>
+
+<section id="github" class="remote">
+  <h2>Code</h2>
+  <ul class="unstyled"></ul>
+  <p>Want more? <a href="http://github.com/jhubert">Visit my GitHub account</a>.</p>
+</section>
+
+<section id="instagram" class="remote">
+  <h2>Views</h2>
+  <ul class="unstyled"></ul>
+  <div class="preview hidden"><div class="preview-padding"><img /><p></p></div></div>
+</section>
+
+{% raw %}
+<script type="text/x-handlebars" id="t-github-repo">
+<li><a href="{{html_url}}">{{name}}</a> <span>{{description}}</span><span class="git-details">{{watchers_count}} watchers, {{forks}} forks</span></li>
+</script>
+
+<script type="text/x-handlebars" id="t-instagram-photo">
+<li><img src="{{images.thumbnail.url}}" data-fullsize="{{images.standard_resolution.url}}" data-caption="{{caption.text}}"></li>
+</script>
+{% endraw %}
+
+<script type="text/javascript">
+  App.Github.starredRepos({
+    login: 'jhubert',
+    target_selector: '#github ul',
+    template: document.getElementById('t-github-repo').innerHTML,
+    on_complete: function () { document.getElementById('github').className = '' }
+  });
+
+  App.Instagram.latestPhotos({
+    user_id: 579661,
+    target_selector: '#instagram ul',
+    preview_selector: '#instagram .preview',
+    template: document.getElementById('t-instagram-photo').innerHTML,
+    count: 7,
+    on_complete: function () { document.getElementById('instagram').className = '' }
+  });
+
+  YUI().use('node', 'event-mouseenter', function (Y) {
+    var previewContainer = Y.one('#instagram .preview'),
+        imgHolder = previewContainer.one('img'),
+        captionHolder = previewContainer.one('p'),
+        timer;
+
+    function onHover(e) {
+      var t = e.currentTarget;
+
+      clearTimeout(timer);
+
+      imgHolder.setAttribute('src', t.getData('fullsize'));
+      captionHolder.set('innerHTML', t.getData('caption'));
+      previewContainer.removeClass('hidden');
+    }
+
+    function offHover(e) {
+      var t = e.currentTarget;
+
+      timer = setTimeout(function () {
+        previewContainer.addClass('hidden');
+        imgHolder.setAttribute('src', '');
+        captionHolder.set('innerHTML', '');
+      }, 500);
+    }
+
+    Y.one('#instagram').delegate('mouseenter', onHover, 'li img');
+    Y.one('#instagram').delegate('mouseleave', offHover, 'li img');
+  });
+</script>

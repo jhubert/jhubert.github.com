@@ -1,0 +1,32 @@
+---
+layout: post
+title: Using Ruby to cleanup
+category: article
+tags: howto rubyonrails
+---
+
+<p>I had a problem with editors on one of my sites not conforming to the standards for url path formatting (all lowercase alphanumeric, hyphen instead of spaces) so I added a little validation to the page model:</p>
+
+{% highlight ruby %}
+validates_format_of :slug,
+    :with => /\A[a-z0-9\-]+\Z/,
+    :message => 'can only contain lowercase letters, numbers and hyphens'
+{% endhighlight %}
+
+<p>Now, I had to update all of the pages that had been written to fit the new standard, but the real problem was updating inter-page links that had already been written. Luckily, script console came to the rescue:</p>
+
+{% highlight ruby %}
+Page.find(:all).each { |p|
+  p.update_attribute(:slug,p.slug.downcase.gsub('_','-'))
+};nil
+
+Page.find(:all).each do |p|
+  p.update_attribute(:body,
+    p.body.gsub(/\/c\/([a-z0-9\_\-]+)/i) { |m|
+      "/c/#{m.downcase.gsub('_','-')}"
+    }
+  )
+};nil
+{% endhighlight %}
+
+<p>I love Ruby. This would have been a pain in the ass in any other language.</p>

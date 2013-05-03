@@ -1,0 +1,46 @@
+---
+layout: post
+title: Redirecting Moveable Type URLs
+category: article
+tags: howto wordpress
+---
+
+<p>Well, I read the different options that were posted on how to migrate the links, and I didn&#8217;t like any of them.  I wasn&#8217;t really a fan of leaving my MoveableType installation on the server for X duration.
+
+
+
+So, I wrote my own solution that is easily applied to the WordPress installation in the form of a custom 404 page.
+
+
+
+The page is fairly simple.  All it does is the following:
+
+
+
+</p><ul><li>Tries to figure out what the title of the post is, or should be</li>
+
+	<li>Formats the title according to what WordPress wants it to be</li>
+
+	<li>Checks the database to see if a post by that name exists</li>
+
+	<li>If it does, it sends you there with a proper 301 redirect</li>
+
+	<li>If it doesn&#8217;t, it displays the standard error page</li>
+
+</ul>
+
+
+
+The nice thing about this technique is that you have full control over it, and since it&#8217;s part of the template, you can edit it quickly and easily without using FTP or SSH.
+
+
+
+I have attached the PHP file that I used here, and it is full of comments.
+
+
+
+<a href="http://www.illanti.com/files/custom_404.zip" title="Custom 404 Page for MoveableType Links">Custom 404 Page for MoveableType Links</a>
+
+
+
+I would love to hear any feedback or comments on how it can be improved&#8230; or even why it sucks.

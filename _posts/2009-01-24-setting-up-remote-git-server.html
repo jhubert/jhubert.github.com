@@ -1,0 +1,59 @@
+---
+layout: post
+title: Setting up a remote server to access my git repository
+category: article
+tags: howto git
+---
+
+<p>I host all of my Git repositories on a box that has a different port than normal SSH connections use, which causes git checkouts to be a bit of a pain in the butt.</p>
+
+<p>So, in order to deal with this, any computer I plan on continually using for Git access, I add to the git user&#8217;s authorized_keys list. Here is the step by step I use to make it easy.</p>
+
+<p>All of these commands are performed on the computer I want to grant permission to.</p>
+
+<p>First, make sure I have a public ssh key.</p>
+
+{% highlight bash %}
+cat .ssh/id_rsa.pub
+{% endhighlight %}
+
+<p>Now, lets copy that public key to the Git server.</p>
+
+{% highlight bash %}
+scp -P 8888 .ssh/id_rsa.pub git@YOUR_SERVER_ADDRESS:~
+{% endhighlight %}
+
+<p>Using a remote SSH command, lets append our id_rsa.pub file to the authorized keys list, and then delete the file since we won&#8217;t be using it anymore.</p>
+
+{% highlight bash %}
+ssh -p 8888 git@YOUR_SERVER_ADDRESS "cat id_rsa.pub &gt;&gt; .ssh/authorized_keys; rm id_rsa.pub"
+{% endhighlight %}
+
+<p>Test the connection to make sure we can connect without a password. Just ssh and then exit immediately if it worked.</p>
+
+{% highlight bash %}
+ssh git@YOUR_SERVER_ADDRESS -p 8888
+{% endhighlight %}
+
+<p>Alright, so once that works, you have permission&#8230; but it still doesn&#8217;t deal with the port problem. To do that, we will create a .ssh host in the config file.</p>
+
+{% highlight bash %}
+vi .ssh/config
+{% endhighlight %}
+
+<p>You want to add something that looks like this:</p>
+
+{% highlight bash %}
+host myserver
+hostname YOUR_SERVER_ADDRESS
+user git
+port 8888
+{% endhighlight %}
+
+<p>Once you&#8217;ve done that, save the file and exit.</p>
+
+<p>Now, you should be able to clone your git repo without any problems. No more passwords, no more long git urls. Just beautiful simplicity.</p>
+
+{% highlight bash %}
+git clone myserver:commentize.git
+{% endhighlight %}

@@ -1,0 +1,32 @@
+---
+layout: post
+title: Accidentally deleting all the .svn folders
+category: article
+tags: howto svn
+---
+
+<p>I did something really stupid today.  I deleted all of the .svn folders in my project before committing my changes, and after building a major addition to it.  I was trying to delete them from another folder, and used the wrong terminal window. :|</p>
+
+<p>Anyway, point being, I fixed it!</p>
+
+<p>Here is what I did:</p>
+
+{% highlight bash %}
+> pwd
+~/Development/project_name/
+> cd ..
+> svn co http://svn.domain.com/repo/trunk/ project_name_temp/
+> cd project_name_temp
+> find .  -type d -name ".svn" -exec mv -f '{}' ../project_name/log/.'{}'  \;
+find: ./app/.svn: No such file or directory
+find: ./app/apis/.svn: No such file or directory
+(repeated.. this is normal)
+> cd ..
+> rm -R project_name_temp/
+{% endhighlight %}
+
+<p>The key was:</p>
+
+{% highlight bash %}
+find .  -type d -name ".svn" -exec mv -f '{}' ../project_name/log/.'{}'  \;
+{% endhighlight %}

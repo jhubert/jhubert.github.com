@@ -1,0 +1,12 @@
+---
+layout: post
+title: How much has ModRails made in donations?
+---
+
+<p>So, after totally falling in love with ModRails (Phusion Passenger) a few months back, I was looking at their &#8220;Enterprise Edition&#8221; and began wondering how much they had made so far with their free software&#8230;</p>
+
+<p>Luckily, I had Ruby and Hpricot handy. I opened up IRB and ran the following code:</p>
+
+<p><code> require 'hpricot' <br/>require 'open-uri' <br/> doc = Hpricot(open('http://www.modrails.com/enterprise.html')) <br/>(doc/"tr/td").collect { |td| td.inner_html.scan('USD').empty? ? nil : td.inner_html.sub('USD ','').to_i }.compact.inject { |s,n| s + n } </code></p>
+
+<p>To date, they have made $20,700 in donations! Not bad for two guys and some &#8220;free&#8221; software.</p>

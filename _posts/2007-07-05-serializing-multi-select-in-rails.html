@@ -1,0 +1,90 @@
+---
+layout: post
+title: Serialized Multiple Select in Rails
+category: article
+tags: howto rubyonrails
+---
+
+<p>In the current app i’m working on, I wanted to store multiple values in a single column.  I know, violation of the first normal form.. blah blah blah.  Save it.</p>
+
+<p>Anyway, I wanted to have a multiple select box that would easily allow me to Manage and update the attributes of the model. Here is my solution.</p>
+
+<h3>Create the database table</h3>
+
+{% highlight ruby %}
+create_table :tshirt, :force => true do |t|
+  t.column :available_colors, :string
+  t.column :available_sizes, :string
+end
+{% endhighlight %}
+
+<h3>Create the Model</h3>
+
+{% highlight ruby %}
+class Tshirt < ActiveRecord::Base
+  serialize :available_colors, Array
+  serialize :available_sizes, Array
+end
+{% endhighlight %}
+
+<h3>Create the <span class="caps">YAML</span> Options Hash</h3>
+
+<p>I use an options.yml file in the config directory to setup the options for the object. A containing hash is created using the name of the object, and then the sub-hashes match the name of the column.</p>
+
+<p>./config/options.yml</p>
+
+{% highlight ruby %}
+tshirt:
+  available_colors:
+    1: Red
+    2: Blue
+    3: Green
+  available_sizes:
+    1: Small
+    2: Medium
+    3: Large
+{% endhighlight %}
+
+<h3>Load the Options File into the App</h3>
+
+<p>In your environment.rb file you have to load the <span class="caps">YAML</span> parser and then parse the options.yml file:</p>
+
+{% highlight ruby %}
+require 'yaml'
+OPTIONS = YAML::load(File.open("#{RAILS_ROOT}/config/options.yml"))
+{% endhighlight %}
+
+<h3>The Select Box</h3>
+
+<p>This is the hard part.</p>
+
+{% highlight ruby %}
+module ActionView
+  module Helpers
+    module FormOptionsHelper
+      include ERB::Util
+
+      def serialized_multiple_select(object, method, choices = {}, options = {}, html_options = {})
+        html = []
+        html << "<select id=\"#{object}_#{method}\" name=\"#{object}[#{method}]\" multiple=\"multiple\" size=\"5\">"
+        html << options_for_select(OPTIONS[object].invert,self.instance_variable_get('@'+object).send(method).collect{|x| x.to_i })
+        html << "</select>"
+        return html
+      end
+    end
+  end
+end
+{% endhighlight %}
+
+<h3>Add the select box to your form</h3>
+
+<p>And this is the easy part:</p>
+
+{% highlight erb %}
+<p>Colors: <%= serialized_multiple_select 'tshirt', 'available_colors' %></p>
+<p>Sizes: <%= serialized_multiple_select 'tshirt', 'available_sizes' %></p>
+{% endhighlight %}
+
+<p>I am pretty sure there are better way to do this, but this one worked for me.</p>
+
+<p>Also, my serialized_multiple_select has options that it doesn’t even use.  I should really use them.  Please offer feedback if you have any. :)</p>

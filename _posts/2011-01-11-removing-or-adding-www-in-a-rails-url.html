@@ -1,0 +1,52 @@
+---
+layout: post
+title: Rails 3 - Removing or adding www in the url
+category: article
+tags: howto rubyonrails
+---
+
+<p>I don&#8217;t like having two separate domains that point to the same content for a number of reasons. Caching and SEO optimization are two them that make it worth dealing with for me. Here is how I deal with that in Rails 3.</p>
+
+<p>Usually, I would handle this in my webserver config file but since I&#8217;ve started using Heroku I don&#8217;t have access to a config file so the Rails application needs to handle that for me.</p>
+
+<p>One way to do the redirect is to have some code in your application_controller.rb file that checks for www. and then behaves accordingly. Like this:</p>
+
+{% highlight ruby %}
+before_filter :strip_www
+
+def strip_www
+  if request.env["HTTP_HOST"] == "myapp.com"
+    redirect_to "http://www.myapp.com/"
+  end
+end
+{% endhighlight %}
+
+<p>This functions just fine, however, there is no need to load the entire application stack just to do a redirection.</p>
+
+<p>Fortunately, Rails runs on Rack which means you can run some pretty awesome middleware and a few of the guys over at <a href="http://pivotallabs.com/">pivotal labs</a> have done just that.</p>
+
+<p>Enter <a href="https://github.com/pivotal/refraction">Refraction</a>.</p>
+
+<p>Refraction is a piece of middleware that gives you a router before the request reaches your main application stack, which means you can intercept the call and perform a redirect on it without loading a bunch of unnecessary code. You can read a lot more about it in the <a href="https://github.com/pivotal/refraction">README file on GitHub</a>.</p>
+
+<p>All I&#8217;m going to show you here is how to ADD &#8220;www.&#8221; to a request that doesn&#8217;t have it. These instructions are fairly similar to the README.md, with the exception of the refraction_rules and a small change to the production.rb call.</p>
+
+<p>First, install the refraction gem. I recommend adding &#8220;<strong>gem &#8216;refraction&#8217;</strong>&#8221; to your Gemfile and running &#8220;<strong>bundle install</strong>&#8221; in your app. This will also install it on Heroku when you push.</p>
+
+<p>Once you have done that, we are going to add the following call near the top of your <strong>config/environments/production.rb</strong> file:</p>
+
+{% highlight ruby %}
+config.middleware.insert_before(::Rack::Lock, ::Refraction)
+{% endhighlight %}
+
+<p>and then create a new file inside the <strong>config/initializers/</strong> folder called <strong>refraction_rules.rb</strong> that has the following content in it:</p>
+
+{% highlight ruby %}
+Refraction.configure do |req|
+  req.permanent! :host => "www.mydomain.com" if req.host !~ /^www./
+end
+{% endhighlight %}
+
+<p>Once that&#8217;s done, you should be good to go. I tested this on my dev box by setting my <strong>/etc/hosts</strong> file up to point <a href="http://www.mydomain.com">www.mydomain.com</a> and mydomain.com to 127.0.0.1 which should work nicely for testing. :)</p>
+
+<p>Good luck!</p>

@@ -1,0 +1,14 @@
+---
+layout: default
+description: An archive of my projects since 2000.
+---
+
+<div id="posts">
+  <h2>Adventures in Entrepreneurialism</h2>
+  <p>Ever since I was a child I have been creating "businesses," with varying levels of success. This list is by no means complete yet. It contains a collection of advertures that helped me develop into <a href="/about.html">the man I am today</a>.</p>
+  <ul>
+    {% for post in site.categories.project %}
+    <li><span>{{ post.date | date_to_string }}</span> - <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>

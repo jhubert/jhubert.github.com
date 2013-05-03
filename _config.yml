@@ -1,0 +1,27 @@
+# standard jekyll configuration
+
+permalink: /:year/:month/:day/:title.html
+pygments: true
+exclude: ['Rakefile', 'README.md', 'config.rb']
+markdown: rdiscount
+
+# configuration required for some pages
+
+domain: jeremyhubert.com
+title: "Jeremy [Hubert] Baker"
+author: Jeremy
+email: jhubert@gmail.com
+
+# configuration for ehancements, uncomment to enable
+
+# feedburner:
+#   id: feedburnerid
+
+google_analytics:
+  account: UA-195712-2
+
+# github:
+#   username: jhubert
+
+# disqus:
+#   id: disqusid

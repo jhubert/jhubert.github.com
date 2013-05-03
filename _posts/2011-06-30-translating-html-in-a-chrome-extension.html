@@ -1,0 +1,37 @@
+---
+layout: post
+title: Translating HTML in a Chrome Extension
+---
+
+<p>I have been working on updating my <a href="http://bitly.com/livecss-chrome">Live CSS Editor chrome extension</a> to add some new features, and in the process, I figured I would set it up so that it could be translated into other languages.</p>
+
+<p>Chrome has a pretty nice translation setup, which you can learn more about on their <a href="http://code.google.com/chrome/extensions/i18n.html">internationalization docs</a>. It works great for any javascript, css or manifest files, but I wanted to translate the text in the HTML options page.</p>
+
+<p>It turned out to be pretty easy.</p>
+
+<p>First, I used an HTML data attribute to specify what the <i>messagename</i> would be for each area. If the element wasn&#8217;t already wrapped in an HTML tag that was specific enough, I just wrapped it in a span.</p>
+
+<p>For example:</p>
+
+<pre><code class="javascript">&lt;h1&gt;Live CSS Editor Options&lt;/h1&gt;</code></pre>
+
+<p>Becomes:</p>
+
+<pre><code class="javascript">&lt;h1 data-message="optionsHeaderTitle"&gt;Live CSS Editor Options&lt;/h1&gt;</code></pre>
+
+<p>This lets me specify what key each section would use from the messages hash. Once that&#8217;s setup, a few lines of Javascript does the replacement for me as soon as the page is loaded:</p>
+
+{% highlight javascript %}
+var objects = document.getElementsByTagName('*'), i;
+  for(i = 0; i < objects.length; i++) {
+    if (objects[i].dataset && objects[i].dataset.message) {
+      objects[i].innerHTML = chrome.i18n.getMessage(objects[i].dataset.message);
+    }
+  }
+{% endhighlight %}
+
+<p>This code loops through each element on the page, and if the element has a <i>data-message</i> attribute, it swaps the content of the element with the translation from the messages hash.</p>
+
+<p>Of course, for each <i>messagename</i> you&#8217;ve added to the page, you need to setup an equivalent entry in the messages.json file. For more information on this, checkout out the <a href="http://code.google.com/chrome/extensions/i18n.html">internationalization docs</a>.</p>
+
+<p>This is a fairly simple solution, and dosen&#8217;t cover every internationalization situation. However, for taking care of something like an options page, it works just right.</p>
